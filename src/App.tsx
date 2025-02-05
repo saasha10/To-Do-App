@@ -1,17 +1,11 @@
-import React from 'react';
 import './App.css';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import Header from './components/Header';
 
 function App() {
   return (
     <ChakraProvider value={defaultSystem}>
-      <div>
-        <header className="App-header">
-          <p className="title">
-            To-Do List
-          </p>
-        </header>
-      </div>
+      <Header title='To-Do List' />
     </ChakraProvider>
   );
 }
