@@ -38,6 +38,10 @@ const TaskItem = styled.div`
     }
 `;
 
+const DeleteIcon = styled(DeleteFilled)`
+  color: #e21212;
+`;
+
 function App() {
   const [toDoList, setToDoList] = useState<Item[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
@@ -74,6 +78,11 @@ function App() {
     setToDoList(toDoListUpdated);
   };
 
+  const removeTask = (id: string) => {
+    const toDoListFiltered: Item[] = toDoList.filter(item => item.id !== id);
+    setToDoList(toDoListFiltered);
+  };
+
   return (
     <ChakraProvider value={defaultSystem}>
       <Header title='To-Do List' />
@@ -97,7 +106,7 @@ function App() {
                 <TaskItem key={item.id}>
                   <Icon onClick={() => handleCompletedTask(item.id)} />
                   <Text>{item.title}</Text>
-                  <DeleteFilled onClick={console.log} />
+                  <DeleteIcon onClick={() => removeTask(item.id)} />
                 </TaskItem>
               );
             })
