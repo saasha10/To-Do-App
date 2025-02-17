@@ -4,7 +4,7 @@ import Header from './components/Header';
 import { Input } from "@chakra-ui/react"
 import { DeleteFilled, CheckCircleFilled, CheckCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, KeyboardEvent } from 'react';
 
 interface Item {
   id: string,
@@ -42,6 +42,12 @@ function App() {
   const [toDoList, setToDoList] = useState<Item[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
 
+  const handleKeyPressed = (e: KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter' && newTaskTitle !== ''){
+      handleAddTask();
+    }
+  }
+
   const cleanNewTaskTitle = () => setNewTaskTitle("");
 
   const handleAddTask = () => {
@@ -55,13 +61,32 @@ function App() {
     cleanNewTaskTitle();
   };
 
+  const handleCompletedTask = (id: string) => {
+    const toDoListUpdated: Item[] = toDoList.map(item => {
+      if(item.id === id){
+        return ({
+          ...item,
+          completed: !item.completed
+        })
+      }
+      return item;
+    });
+    setToDoList(toDoListUpdated);
+  };
+
   return (
     <ChakraProvider value={defaultSystem}>
       <Header title='To-Do List' />
       <Flex>
         <Wrapper>
           <Heading>Add a new task</Heading>
-          <Input placeholder="Enter your task" maxW={"300px"} value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} />
+          <Input 
+            placeholder="Enter your task" 
+            maxW={"300px"} 
+            value={newTaskTitle} 
+            onChange={e => setNewTaskTitle(e.target.value)} 
+            onKeyDown={handleKeyPressed}
+            />
           <Button onClick={handleAddTask} disabled={!newTaskTitle}>Add task</Button>
         </Wrapper>
         <List>
@@ -70,7 +95,7 @@ function App() {
               const Icon = item.completed ? CheckCircleFilled : CheckCircleOutlined;
               return (
                 <TaskItem key={item.id}>
-                  <Icon onClick={console.log} />
+                  <Icon onClick={() => handleCompletedTask(item.id)} />
                   <Text>{item.title}</Text>
                   <DeleteFilled onClick={console.log} />
                 </TaskItem>
