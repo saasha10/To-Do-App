@@ -1,5 +1,5 @@
 import './App.css';
-import { ChakraProvider, defaultSystem, Flex, Heading, Wrap, Button, Text } from '@chakra-ui/react';
+import { ChakraProvider, defaultSystem, Flex, Heading, Wrap, Button, Text, Card } from '@chakra-ui/react';
 import Header from './components/Header';
 import { Input } from "@chakra-ui/react"
 import { DeleteFilled, CheckCircleFilled, CheckCircleOutlined } from '@ant-design/icons';
@@ -22,6 +22,13 @@ const Wrapper = styled.div`
 const List = styled(Wrap)`
   padding-top: 1rem;
 `;
+
+const CardWrapper = styled(Card.Root)`
+  width: 70vw;
+  height: 80vh;
+  margin: 1rem;
+  padding: 20px;
+`
 
 const TaskItem = styled.div`
     display: flex;
@@ -47,7 +54,7 @@ function App() {
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
 
   const handleKeyPressed = (e: KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === 'Enter' && newTaskTitle !== ''){
+    if (e.key === 'Enter' && newTaskTitle !== '') {
       handleAddTask();
     }
   }
@@ -67,7 +74,7 @@ function App() {
 
   const handleCompletedTask = (id: string) => {
     const toDoListUpdated: Item[] = toDoList.map(item => {
-      if(item.id === id){
+      if (item.id === id) {
         return ({
           ...item,
           completed: !item.completed
@@ -89,29 +96,31 @@ function App() {
       <Flex>
         <Wrapper>
           <Heading>Add a new task</Heading>
-          <Input 
-            placeholder="Enter your task" 
-            maxW={"300px"} 
-            value={newTaskTitle} 
-            onChange={e => setNewTaskTitle(e.target.value)} 
+          <Input
+            placeholder="Enter your task"
+            maxW={"300px"}
+            value={newTaskTitle}
+            onChange={e => setNewTaskTitle(e.target.value)}
             onKeyDown={handleKeyPressed}
-            />
+          />
           <Button onClick={handleAddTask} disabled={!newTaskTitle}>Add task</Button>
         </Wrapper>
-        <List>
-          {toDoList.length > 0 && (
-            toDoList.map(item => {
-              const Icon = item.completed ? CheckCircleFilled : CheckCircleOutlined;
-              return (
-                <TaskItem key={item.id}>
-                  <Icon onClick={() => handleCompletedTask(item.id)} />
-                  <Text>{item.title}</Text>
-                  <DeleteIcon onClick={() => removeTask(item.id)} />
-                </TaskItem>
-              );
-            })
-          )}
-        </List>
+        <CardWrapper variant={"elevated"}>
+          <List>
+            {toDoList.length > 0 && (
+              toDoList.map(item => {
+                const Icon = item.completed ? CheckCircleFilled : CheckCircleOutlined;
+                return (
+                  <TaskItem key={item.id}>
+                    <Icon onClick={() => handleCompletedTask(item.id)} />
+                    <Text>{item.title}</Text>
+                    <DeleteIcon onClick={() => removeTask(item.id)} />
+                  </TaskItem>
+                );
+              })
+            )}
+          </List>
+        </CardWrapper>
       </Flex>
     </ChakraProvider>
   );
