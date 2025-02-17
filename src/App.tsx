@@ -1,14 +1,15 @@
 import './App.css';
-import { ChakraProvider, defaultSystem, Flex, Heading, Wrap, Button } from '@chakra-ui/react';
+import { ChakraProvider, defaultSystem, Flex, Heading, Wrap, Button, Text } from '@chakra-ui/react';
 import Header from './components/Header';
 import { Input } from "@chakra-ui/react"
-import { CheckboxCard } from './components/ui/checkbox-card';
+import { DeleteFilled, CheckCircleFilled, CheckCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useState } from 'react';
 
 interface Item {
   id: string,
-  title: string
+  title: string,
+  completed: boolean
 }
 
 const Wrapper = styled.div`
@@ -22,6 +23,21 @@ const List = styled(Wrap)`
   padding-top: 1rem;
 `;
 
+const TaskItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    width: 150px;
+    height: 60px;
+    border: 1px solid lightgrey;
+    border-radius: 8px;
+
+    &:hover{
+      background-color: #c9e2e0ee;
+    }
+`;
+
 function App() {
   const [toDoList, setToDoList] = useState<Item[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
@@ -31,7 +47,8 @@ function App() {
   const handleAddTask = () => {
     const newTask: Item = {
       id: Date.now().toString(),
-      title: newTaskTitle!
+      title: newTaskTitle,
+      completed: false
     };
 
     setToDoList(prevState => [...prevState, newTask]);
@@ -49,9 +66,16 @@ function App() {
         </Wrapper>
         <List>
           {toDoList.length > 0 && (
-            toDoList.map(item => (
-              <CheckboxCard key={item.id} label={item.title} size='sm' />
-            ))
+            toDoList.map(item => {
+              const Icon = item.completed ? CheckCircleFilled : CheckCircleOutlined;
+              return (
+                <TaskItem key={item.id}>
+                  <Icon onClick={console.log} />
+                  <Text>{item.title}</Text>
+                  <DeleteFilled onClick={console.log} />
+                </TaskItem>
+              );
+            })
           )}
         </List>
       </Flex>
